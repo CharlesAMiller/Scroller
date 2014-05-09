@@ -20,7 +20,7 @@ public:
 
 	Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p = sf::Vector2f(0,0));
 
-	Player(std::string pa, b2World& w);
+	Player(std::string pa, b2World& w, sf::Vector2f pos = sf::Vector2f(0,0));
 
 	virtual void update();
 

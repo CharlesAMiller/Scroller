@@ -12,6 +12,7 @@ sf::Texture Object::t;
 
 Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 {
+
 	//n++;
 
 	shape.setSize(s);
@@ -26,7 +27,8 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 	else
 		bodyDef.position.Set(p.x, p.y);
 
-	dynamicBody.SetAsBox(10.0f*32, 10.0f*32);
+	//If this isn't set to '/' operand there's a likelihood that the object will be large and clip into other hitboxes. Making it impossible to move.
+	dynamicBody.SetAsBox(toSf(shape.getSize().x), toSf(shape.getSize().y));
 
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 1.0f;
@@ -36,10 +38,9 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 	body->CreateFixture(&fixtureDef);
 }
 
-Object::Object(std::string pa, b2World& w)
+Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 {
 
-	//n++;
 	static bool isLoaded = false;
 
 	if(!isLoaded)
@@ -49,10 +50,12 @@ Object::Object(std::string pa, b2World& w)
 		isLoaded = false;
 	}
 
+	shape.setPosition(pos);
+
 	shape.setTexture(&t);
 	shape.setSize(sf::Vector2f(t.getSize()));
 
-	//shape.setOrigin(t.getSize().x/2, t.getSize().y/2);
+	shape.setOrigin(t.getSize().x/2, t.getSize().y/2);
 
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(getSfCoords(b2Vec2(400+15*6, 300)).x, getSfCoords(b2Vec2(400, 300)).y);

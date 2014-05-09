@@ -23,7 +23,7 @@ public:
 	Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f pos = sf::Vector2f(0, 0));
 
 	//path
-	Object(std::string pa, b2World&);
+	Object(std::string pa, b2World&, sf::Vector2f pos = sf::Vector2f(0,0));
 
 	sf::RectangleShape getShape();
 

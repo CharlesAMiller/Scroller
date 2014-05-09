@@ -12,8 +12,8 @@ Player::Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p):
 {
 }
 
-Player::Player(std::string pa, b2World& w):
-	Object("player.png", w)
+Player::Player(std::string pa, b2World& w, sf::Vector2f pos):
+	Object("player.png", w, pos)
 {
 }
 

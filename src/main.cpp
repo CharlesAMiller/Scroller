@@ -51,7 +51,7 @@ int main()
 		objects.push_back(o);
 	}
 
-	Player p (sf::Vector2f(15,15), sf::Color::Magenta, world);
+	Player p ("player.png", world, sf::Vector2f(-20,0));
 
 	sf::Clock timer;
 
