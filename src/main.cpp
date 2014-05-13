@@ -44,14 +44,16 @@ int main()
 
 	createGround(&world);
 
-	const int boxes = 5;
+	const int boxes = 10;
 	for(unsigned int i = 0; i < boxes; i++)
 	{
 		Object* o = new Object(sf::Vector2f(10,10), sf::Color::Green, world, true, sf::Vector2f(getSfCoords(b2Vec2(400+15*i, 300)).x, getSfCoords(b2Vec2(400, 300)).y));
 		objects.push_back(o);
 	}
 
-	Player p ("player.png", world, sf::Vector2f(-20,0));
+	Player p ("box.png", world, sf::Vector2f(50,0));
+
+	//Player p(sf::Vector2f(15,15), sf::Color::Magenta, world);
 
 	sf::Clock timer;
 
@@ -106,13 +108,17 @@ void createGround(b2World* w)
 	b2BodyDef bodyDef;
 	b2Body* body;
 	b2PolygonShape shape;
+	b2FixtureDef fixtureDef;
 
+	fixtureDef.density = 0.7;
+	fixtureDef.friction = 0.9;
 	bodyDef.position.Set(toB2(100), toB2(400));
 	body = w->CreateBody(&bodyDef);
 
 	shape.SetAsBox(toB2(400), toB2(5));
 
 	body->CreateFixture(&shape, 0.0f);
+
 
 	ground.setSize(sf::Vector2f(400,40));
 	ground.setFillColor(sf::Color::Cyan);

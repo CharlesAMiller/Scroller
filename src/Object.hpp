@@ -34,11 +34,13 @@ public:
 
 	virtual ~Object();
 
-	sf::RectangleShape shape;
+	sf::RectangleShape shape, hitbox;
 
 	static int n;
 
 	static sf::Texture t;
+
+	const bool debug = true;
 
 	b2Body* body;
 

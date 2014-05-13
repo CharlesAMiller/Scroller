@@ -23,7 +23,7 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 	bodyDef.type = b2_dynamicBody;
 
 	if(p.x == 0)
-		bodyDef.position.Set(getSfCoords(b2Vec2(400+15*n, 300)).x, getSfCoords(b2Vec2(400, 300)).y);
+		bodyDef.position.Set(getSfCoords(b2Vec2(400, 300)).x, getSfCoords(b2Vec2(400, 300+15*n)).y);
 	else
 		bodyDef.position.Set(p.x, p.y);
 
@@ -31,11 +31,16 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 	dynamicBody.SetAsBox(toSf(shape.getSize().x), toSf(shape.getSize().y));
 
 	fixtureDef.shape = &dynamicBody;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
+	fixtureDef.density = 0.3f;
+	fixtureDef.friction = 0.5f;
 
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
+
+	hitbox.setSize(shape.getSize());
+	hitbox.setOutlineColor(sf::Color::Red);
+	hitbox.setPosition(shape.getPosition());
+	hitbox.setOutlineThickness(1);
 }
 
 Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
@@ -58,9 +63,12 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	shape.setOrigin(t.getSize().x/2, t.getSize().y/2);
 
 	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(getSfCoords(b2Vec2(400+15*6, 300)).x, getSfCoords(b2Vec2(400, 300)).y);
+	if(pos.x == 0)
+		bodyDef.position.Set(toSf(400), toSf(300));
+	else
+		bodyDef.position.Set(pos.x, pos.y);
 
-	dynamicBody.SetAsBox(toB2(shape.getSize().x), toB2(shape.getSize().y) );
+	dynamicBody.SetAsBox(toSf(shape.getSize().x), toSf(shape.getSize().y));
 
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 1.0f;
@@ -68,17 +76,28 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
+
+	hitbox.setSize(shape.getSize());
+	hitbox.setOutlineColor(sf::Color::Red);
+	hitbox.setPosition(shape.getPosition());
+	hitbox.setOutlineThickness(1);
 }
 
 void Object::update()
 {
-	shape.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
+	shape.setPosition(toB2(body->GetPosition().x), toB2(body->GetPosition().y));
 	shape.setRotation(body->GetAngle());
+
+	hitbox.setPosition(toB2(body->GetPosition().x), toB2(body->GetPosition().y));
 }
 
 void Object::draw(sf::RenderWindow& app)
 {
 	app.draw(shape);
+	if(debug)
+	{
+		app.draw(hitbox);
+	}
 }
 
 Object::~Object(){}

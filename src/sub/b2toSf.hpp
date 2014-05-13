@@ -14,7 +14,7 @@
 #include <SFML/Graphics.hpp>
 
 
-const unsigned int pixelsPerMeter = 32;
+const unsigned int pixelsPerMeter = 30;
 
 const double PI = 3.1415926;
 

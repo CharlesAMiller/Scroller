@@ -28,6 +28,8 @@ public:
 
 	virtual ~Player();
 
+	sf::Clock timer;
+
 };
 
 
