@@ -40,7 +40,7 @@ public:
 
 	static sf::Texture t;
 
-	const bool debug = true;
+	const bool debug = false;
 
 	b2Body* body;
 

@@ -17,9 +17,9 @@ float getAngleDegrees(float radians)
 	return (radians*180)/PI;
 }
 
-float toB2(float x){ return x*pixelsPerMeter; }
+float toB2(float x){ return x/pixelsPerMeter; }
 
-float toSf(float x){ return x/pixelsPerMeter; }
+float toSf(float x){ return x*pixelsPerMeter; }
 
 b2Vec2 getB2Coords(sf::Vector2f position)
 {

@@ -44,19 +44,20 @@ int main()
 
 	createGround(&world);
 
-	const int boxes = 10;
+	const int boxes = 200;
 	for(unsigned int i = 0; i < boxes; i++)
 	{
-		Object* o = new Object(sf::Vector2f(10,10), sf::Color::Green, world, true, sf::Vector2f(getSfCoords(b2Vec2(400+15*i, 300)).x, getSfCoords(b2Vec2(400, 300)).y));
+		Object* o = new Object(sf::Vector2f(10,10), sf::Color::Green, world, true);
 		objects.push_back(o);
 	}
 
-	Player p ("box.png", world, sf::Vector2f(50,0));
+	//Player p ("box.png", world, sf::Vector2f(50,0));
 
-	//Player p(sf::Vector2f(15,15), sf::Color::Magenta, world);
+	Player p(sf::Vector2f(15,15), sf::Color::Magenta, world);
 
 	sf::Clock timer;
 
+	float step = 1/360.0f;
 	while(app.isOpen())
 	{
 		app.pollEvent(event);
@@ -75,7 +76,7 @@ int main()
 			timer.restart();
 		}*/
 
-		world.Step(1/180.0f, 8, 3);
+		world.Step(step, 8, 3);
 
 		world.DrawDebugData();
 
@@ -112,16 +113,16 @@ void createGround(b2World* w)
 
 	fixtureDef.density = 0.7;
 	fixtureDef.friction = 0.9;
-	bodyDef.position.Set(toB2(100), toB2(400));
+	bodyDef.position.Set(100.0f/30, 400.0f/30);
 	body = w->CreateBody(&bodyDef);
 
-	shape.SetAsBox(toB2(400), toB2(5));
+	shape.SetAsBox(400.0f/30, 10.0/30);
 
 	body->CreateFixture(&shape, 0.0f);
 
 
 	ground.setSize(sf::Vector2f(400,40));
 	ground.setFillColor(sf::Color::Cyan);
-	ground.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
+	ground.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
 }
 
