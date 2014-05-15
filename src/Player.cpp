@@ -7,6 +7,8 @@
 
 #include "Player.hpp"
 
+sf::RectangleShape Player::shape;
+
 Player::Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p):
 	Object(s, c, w, true, p)
 {
@@ -35,9 +37,10 @@ void Player::update()
 		body->ApplyForce(b2Vec2(50, 0), body->GetWorldCenter(), true);
 	}
 
-	shape.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
+	shape.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
 
-	hitbox.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
+	shape.setRotation(getAngleDegrees(body->GetAngle()));
+	//hitbox.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
 }
 
 void Player::draw(sf::RenderWindow& app)

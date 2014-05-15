@@ -25,7 +25,7 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 	if(p.x == 0)
 		bodyDef.position.Set(300.0f/30, -300.0f/30-n*5/30);
 	else
-		bodyDef.position.Set(p.x, p.y);
+		bodyDef.position.Set(p.x/30, p.y/30);
 
 	//If this isn't set to '/' operand there's a likelihood that the object will be large and clip into other hitboxes. Making it impossible to move.
 	dynamicBody.SetAsBox(10.0f/30, 10.0/30);
@@ -86,9 +86,7 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 void Object::update()
 {
 	shape.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
-	shape.setRotation(body->GetAngle());
-
-	hitbox.setPosition(toB2(body->GetPosition().x), toB2(body->GetPosition().y));
+	shape.setRotation(getAngleDegrees(body->GetAngle()));
 }
 
 void Object::draw(sf::RenderWindow& app)

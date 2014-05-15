@@ -21,9 +21,15 @@ void createGround(b2World* w);
 
 int main()
 {
-	sf::RenderWindow app(sf::VideoMode(800, 600, 32), "Scroller");
+	sf::ContextSettings cs;
+	cs.antialiasingLevel = 16;
+
+	sf::RenderWindow app(sf::VideoMode(800, 600, 32), "Scroller", sf::Style::Default, cs);
+	//app.setFramerateLimit(60);
+
 	sf::Event event;
 
+	sf::Time re;
 	b2Vec2 gravity (0.0f, 9.8f);
 	b2World world(gravity);
 
@@ -44,16 +50,16 @@ int main()
 
 	createGround(&world);
 
-	const int boxes = 200;
+	const int boxes = 100;
 	for(unsigned int i = 0; i < boxes; i++)
 	{
-		Object* o = new Object(sf::Vector2f(10,10), sf::Color::Green, world, true);
+		Object* o = new Object(sf::Vector2f(20,20), sf::Color::Green, world, true);
 		objects.push_back(o);
 	}
 
 	//Player p ("box.png", world, sf::Vector2f(50,0));
 
-	Player p(sf::Vector2f(15,15), sf::Color::Magenta, world);
+	Player p(sf::Vector2f(20,20), sf::Color::Magenta, world);
 
 	sf::Clock timer;
 
@@ -69,18 +75,10 @@ int main()
 			app.close();
 		}
 
-		/*if(sf::Mouse::isButtonPressed(sf::Mouse::Left) && timer.getElapsedTime().asSeconds() > .2)
-		{
-			Object* o = new Object(sf::Vector2f(10, 10), sf::Color::Red, world, true, sf::Vector2f(toB2(sf::Mouse::getPosition().x), toB2(sf::Mouse::getPosition(app).y)));
-			objects.push_back(o);
-			timer.restart();
-		}*/
-
 		world.Step(step, 8, 3);
 
 		world.DrawDebugData();
 
-		p.update();
 
 		for(unsigned int i = 0; i < objects.size(); i++)
 		{
@@ -89,6 +87,8 @@ int main()
 
 		app.clear(sf::Color::White);
 
+		p.update();
+
 		app.draw(backgroundShape);
 
 		for(unsigned int i = 0; i < objects.size(); i++)
@@ -96,10 +96,17 @@ int main()
 			objects.at(i)->draw(app);
 		}
 
+		bool moveWith = true;
+
+		if(moveWith)
+			v.setCenter(p.shape.getPosition());
+
 		p.draw(app);
 
 		app.draw(ground);
 		app.display();
+
+		sf::sleep(sf::milliseconds(5));
 	}
 
 }

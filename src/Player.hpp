@@ -30,6 +30,8 @@ public:
 
 	sf::Clock timer;
 
+	static sf::RectangleShape shape;
+
 };
 
 
