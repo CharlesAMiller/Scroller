@@ -10,7 +10,7 @@
 int Object::n = 0;
 sf::Texture Object::t;
 
-Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
+Object::Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p)
 {
 
 	n++;
@@ -27,7 +27,6 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f p)
 	else
 		bodyDef.position.Set(p.x/30, p.y/30);
 
-	//If this isn't set to '/' operand there's a likelihood that the object will be large and clip into other hitboxes. Making it impossible to move.
 	dynamicBody.SetAsBox(10.0f/30, 10.0/30);
 
 	fixtureDef.shape = &dynamicBody;
@@ -48,12 +47,12 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 
 	static bool isLoaded = false;
 
-	if(!isLoaded)
-	{
+	//if(!isLoaded)
+	//{
 		std::cout << "Loaded";
 		t.loadFromFile(pa);
 		isLoaded = false;
-	}
+	//}
 
 	shape.setPosition(pos);
 
@@ -63,16 +62,17 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	shape.setOrigin(t.getSize().x/2, t.getSize().y/2);
 
 	bodyDef.type = b2_dynamicBody;
-	if(pos.x == 0)
-		bodyDef.position.Set(toSf(400), toSf(300));
-	else
-		bodyDef.position.Set(pos.x, pos.y);
 
-	dynamicBody.SetAsBox(toSf(shape.getSize().x), toSf(shape.getSize().y));
+	if(pos.x == 0)
+		bodyDef.position.Set(300.0f/30, -300.0f/30-n*5/30);
+	else
+		bodyDef.position.Set(pos.x/30, pos.y/30);
+
+	dynamicBody.SetAsBox((t.getSize().x/2)/30, (t.getSize().y/2)/30);
 
 	fixtureDef.shape = &dynamicBody;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
+	fixtureDef.density = 0.3f;
+	fixtureDef.friction = 0.5f;
 
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
@@ -100,3 +100,7 @@ void Object::draw(sf::RenderWindow& app)
 
 Object::~Object(){}
 
+sf::RectangleShape Object::getShape()
+{
+	return shape;
+}

@@ -17,19 +17,21 @@
 
 sf::RectangleShape ground;
 
+sf::Texture t;
+
 void createGround(b2World* w);
 
 int main()
 {
+	t.loadFromFile("res/grass.png");
+
 	sf::ContextSettings cs;
 	cs.antialiasingLevel = 16;
 
 	sf::RenderWindow app(sf::VideoMode(800, 600, 32), "Scroller", sf::Style::Default, cs);
-	//app.setFramerateLimit(60);
 
 	sf::Event event;
 
-	sf::Time re;
 	b2Vec2 gravity (0.0f, 9.8f);
 	b2World world(gravity);
 
@@ -38,7 +40,7 @@ int main()
 	app.setView(v);
 
 	sf::Texture backgroundTexture;
-	backgroundTexture.loadFromFile("bg_castle.png");
+	backgroundTexture.loadFromFile("res/bg_castle.png");
 	backgroundTexture.setRepeated(true);
 
 	sf::RectangleShape backgroundShape;
@@ -53,15 +55,14 @@ int main()
 	const int boxes = 100;
 	for(unsigned int i = 0; i < boxes; i++)
 	{
-		Object* o = new Object(sf::Vector2f(20,20), sf::Color::Green, world, true);
+		Object* o = new Object(sf::Vector2f(20,20), sf::Color::Green, world);
+		//Object* o = new Object("res/box.png", world);
 		objects.push_back(o);
 	}
 
-	//Player p ("box.png", world, sf::Vector2f(50,0));
+	Player p ("res/player.png", world, sf::Vector2f(50,0));
 
-	Player p(sf::Vector2f(20,20), sf::Color::Magenta, world);
-
-	sf::Clock timer;
+	//Player p(sf::Vector2f(20,20), sf::Color::Magenta, world);
 
 	float step = 1/360.0f;
 	while(app.isOpen())
@@ -87,7 +88,7 @@ int main()
 
 		app.clear(sf::Color::White);
 
-		p.update();
+		p.update(event);
 
 		app.draw(backgroundShape);
 
@@ -99,7 +100,9 @@ int main()
 		bool moveWith = true;
 
 		if(moveWith)
-			v.setCenter(p.shape.getPosition());
+		{
+			v.setCenter(p.getShape().getPosition());
+		}
 
 		p.draw(app);
 
@@ -123,13 +126,18 @@ void createGround(b2World* w)
 	bodyDef.position.Set(100.0f/30, 400.0f/30);
 	body = w->CreateBody(&bodyDef);
 
-	shape.SetAsBox(400.0f/30, 10.0/30);
+	shape.SetAsBox(400.0f/30, 5.0/30);
 
 	body->CreateFixture(&shape, 0.0f);
 
+	//ground.setOrigin(sf::Vector2f(200, 20));
 
-	ground.setSize(sf::Vector2f(400,40));
-	ground.setFillColor(sf::Color::Cyan);
+	ground.setSize(sf::Vector2f(70, 70));
+
+	t.setRepeated(false);
+	ground.setTexture(&t);
+
+	//ground.setFillColor(sf::Color::Cyan);
 	ground.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
 }
 

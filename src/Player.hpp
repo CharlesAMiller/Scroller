@@ -22,15 +22,15 @@ public:
 
 	Player(std::string pa, b2World& w, sf::Vector2f pos = sf::Vector2f(0,0));
 
-	virtual void update();
+	virtual void update(sf::Event e);
 
 	virtual void draw(sf::RenderWindow& app);
+
+	virtual sf::RectangleShape getShape();
 
 	virtual ~Player();
 
 	sf::Clock timer;
-
-	static sf::RectangleShape shape;
 
 };
 

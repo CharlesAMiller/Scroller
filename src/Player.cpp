@@ -7,10 +7,8 @@
 
 #include "Player.hpp"
 
-sf::RectangleShape Player::shape;
-
 Player::Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p):
-	Object(s, c, w, true, p)
+	Object(s, c, w, p)
 {
 	timer.restart();
 }
@@ -21,25 +19,43 @@ Player::Player(std::string pa, b2World& w, sf::Vector2f pos):
 	timer.restart();
 }
 
-void Player::update()
+void Player::update(sf::Event e)
 {
+
+	//TODO Determine if this keypressed loop is a good means of doing this.
+
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		body->ApplyForce(b2Vec2(0, -50), body->GetWorldCenter(), true);
-		timer.restart();
+		if(body->GetLinearVelocity().y > -1.5)
+			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, -8));
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		body->ApplyForce(b2Vec2(-50, 0), body->GetWorldCenter(), true);
+		if(body->GetLinearVelocity().x > -12)
+			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x - 2, body->GetLinearVelocity().y));
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		body->ApplyForce(b2Vec2(50, 0), body->GetWorldCenter(), true);
+		if(body->GetLinearVelocity().x < 12)
+			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x + 2, body->GetLinearVelocity().y));
+	}
+	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	{
+		dynamicBody.SetAsBox((shape.getSize().x/2)/30, ((shape.getSize().y/2)/30) - t.getSize().y*.2);
 	}
 
-	shape.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
+	else if(e.type == sf::Event::KeyReleased)
+	{
+		if(e.key.code == sf::Keyboard::Left || e.key.code == sf::Keyboard::Right)
+		{
+			body->SetLinearVelocity(b2Vec2(0, body->GetLinearVelocity().y));
+		}
+	}
 
-	shape.setRotation(getAngleDegrees(body->GetAngle()));
+
+	shape.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
+	//shape.setRotation(getAngleDegrees(body->GetAngle()));
+
 	//hitbox.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
 }
 
@@ -52,3 +68,8 @@ void Player::draw(sf::RenderWindow& app)
 }
 
 Player::~Player(){}
+
+sf::RectangleShape Player::getShape()
+{
+	return shape;
+}

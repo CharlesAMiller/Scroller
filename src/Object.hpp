@@ -20,17 +20,17 @@ class Object
 public:
 
 	//size, color
-	Object(sf::Vector2f s, sf::Color c, b2World& w, bool m, sf::Vector2f pos = sf::Vector2f(0, 0));
+	Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f pos = sf::Vector2f(0, 0));
 
 	//path
 	Object(std::string pa, b2World&, sf::Vector2f pos = sf::Vector2f(0,0));
-
-	sf::RectangleShape getShape();
 
 	//Player
 	virtual void update();
 
 	virtual void draw(sf::RenderWindow& app);
+
+	virtual sf::RectangleShape getShape();
 
 	virtual ~Object();
 
@@ -42,13 +42,16 @@ public:
 
 	const bool debug = false;
 
+	//TODO Move these back to private and sort all of that out.
+
 	b2Body* body;
+
+	b2PolygonShape dynamicBody;
 
 private:
 
 	b2BodyDef bodyDef;
 
-	b2PolygonShape dynamicBody;
 
 	b2FixtureDef fixtureDef;
 };
