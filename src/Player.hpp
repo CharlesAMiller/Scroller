@@ -32,6 +32,10 @@ public:
 
 	sf::Clock timer;
 
+private:
+
+	static sf::Texture playerTexture;
+
 };
 
 

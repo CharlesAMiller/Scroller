@@ -11,6 +11,8 @@
 #include <vector>
 #include <iostream>
 
+#include "Box2DDebugDrawer/Box2DDebugDrawer.h"
+
 #include "Object.hpp"
 
 #include "Player.hpp"
@@ -30,10 +32,17 @@ int main()
 
 	sf::RenderWindow app(sf::VideoMode(800, 600, 32), "Scroller", sf::Style::Default, cs);
 
+	app.setFramerateLimit(60);
+
 	sf::Event event;
 
 	b2Vec2 gravity (0.0f, 9.8f);
 	b2World world(gravity);
+
+
+	Box2DDebugDrawer drawer(&app);
+
+	world.SetDebugDraw(&drawer);
 
 	sf::View v(sf::Vector2f(400, 300), sf::Vector2f(800, 600));
 
@@ -52,19 +61,20 @@ int main()
 
 	createGround(&world);
 
-	const int boxes = 100;
+	const int boxes = 0;
 	for(unsigned int i = 0; i < boxes; i++)
 	{
-		Object* o = new Object(sf::Vector2f(20,20), sf::Color::Green, world);
-		//Object* o = new Object("res/box.png", world);
+		//Object* o = new Object(sf::Vector2f(20,20), sf::Color::Green, world);
+		Object* o = new Object("res/box.png", world);
 		objects.push_back(o);
 	}
 
-	Player p ("res/player.png", world, sf::Vector2f(50,0));
+	//Player p ("res/player.png", world, sf::Vector2f(50,0));
 
+	Player p("res/player.png", world, sf::Vector2f(50,0));
 	//Player p(sf::Vector2f(20,20), sf::Color::Magenta, world);
 
-	float step = 1/360.0f;
+	float step = 1/60.0f;
 	while(app.isOpen())
 	{
 		app.pollEvent(event);
@@ -77,9 +87,6 @@ int main()
 		}
 
 		world.Step(step, 8, 3);
-
-		world.DrawDebugData();
-
 
 		for(unsigned int i = 0; i < objects.size(); i++)
 		{
@@ -107,6 +114,9 @@ int main()
 		p.draw(app);
 
 		app.draw(ground);
+
+		world.DrawDebugData();
+
 		app.display();
 
 		sf::sleep(sf::milliseconds(5));
@@ -117,27 +127,22 @@ int main()
 void createGround(b2World* w)
 {
 	b2BodyDef bodyDef;
+	b2EdgeShape shape;
 	b2Body* body;
-	b2PolygonShape shape;
 	b2FixtureDef fixtureDef;
 
-	fixtureDef.density = 0.7;
-	fixtureDef.friction = 0.9;
+	shape.Set(b2Vec2(0.0f, 5.0), b2Vec2(400/30.0f, 5.0f));
 	bodyDef.position.Set(100.0f/30, 400.0f/30);
-	body = w->CreateBody(&bodyDef);
 
-	shape.SetAsBox(400.0f/30, 5.0/30);
+	body = w->CreateBody(&bodyDef);
 
 	body->CreateFixture(&shape, 0.0f);
 
-	//ground.setOrigin(sf::Vector2f(200, 20));
+	ground.setSize(sf::Vector2f(770, 70));
 
-	ground.setSize(sf::Vector2f(70, 70));
-
-	t.setRepeated(false);
+	t.setRepeated(true);
 	ground.setTexture(&t);
 
-	//ground.setFillColor(sf::Color::Cyan);
 	ground.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
 }
 

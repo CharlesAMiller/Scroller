@@ -14,6 +14,20 @@
 #include <Box2D/Box2D.h>
 #include "sub/b2toSf.hpp"
 
+enum class objectType
+{
+	box,
+	circle,
+	edge,
+	complex
+};
+
+struct shape
+{
+	objectType type;
+
+};
+
 class Object
 {
 
@@ -23,7 +37,10 @@ public:
 	Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f pos = sf::Vector2f(0, 0));
 
 	//path
-	Object(std::string pa, b2World&, sf::Vector2f pos = sf::Vector2f(0,0));
+	Object(std::string pa, b2World& w, sf::Vector2f pos = sf::Vector2f(0,0));
+
+	//Used to apply to an already existing texture
+	Object(b2World& w, sf::Vector2f pos = sf::Vector2f(0,0));
 
 	//Player
 	virtual void update();
@@ -38,9 +55,10 @@ public:
 
 	static int n;
 
-	static sf::Texture t;
+	static sf::Texture objectTexture;
 
 	const bool debug = false;
+
 
 	//TODO Move these back to private and sort all of that out.
 
@@ -48,12 +66,13 @@ public:
 
 	b2PolygonShape dynamicBody;
 
-private:
-
 	b2BodyDef bodyDef;
+
+private:
 
 
 	b2FixtureDef fixtureDef;
+
 };
 
 #endif /* OBJECT_HPP_ */

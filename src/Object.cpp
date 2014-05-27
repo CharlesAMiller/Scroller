@@ -8,7 +8,8 @@
 #include "Object.hpp"
 
 int Object::n = 0;
-sf::Texture Object::t;
+
+sf::Texture Object::objectTexture;
 
 Object::Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p)
 {
@@ -47,19 +48,18 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 
 	static bool isLoaded = false;
 
-	//if(!isLoaded)
-	//{
-		std::cout << "Loaded";
-		t.loadFromFile(pa);
-		isLoaded = false;
-	//}
+	if(!isLoaded)
+	{
+		isLoaded = true;
+		objectTexture.loadFromFile(pa);
+	}
 
 	shape.setPosition(pos);
 
-	shape.setTexture(&t);
-	shape.setSize(sf::Vector2f(t.getSize()));
+	shape.setSize(sf::Vector2f(objectTexture.getSize().x, objectTexture.getSize().y));
+	shape.setTexture(&objectTexture);
 
-	shape.setOrigin(t.getSize().x/2, t.getSize().y/2);
+	shape.setOrigin(objectTexture.getSize().x/2, objectTexture.getSize().y/2);
 
 	bodyDef.type = b2_dynamicBody;
 
@@ -68,7 +68,7 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	else
 		bodyDef.position.Set(pos.x/30, pos.y/30);
 
-	dynamicBody.SetAsBox((t.getSize().x/2)/30, (t.getSize().y/2)/30);
+	dynamicBody.SetAsBox((objectTexture.getSize().x/2)/32, (objectTexture.getSize().y/2)/32);
 
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 0.3f;
@@ -81,6 +81,22 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	hitbox.setOutlineColor(sf::Color::Red);
 	hitbox.setPosition(shape.getPosition());
 	hitbox.setOutlineThickness(1);
+}
+
+Object::Object(b2World& w, sf::Vector2f pos)
+{
+	bodyDef.type = b2_dynamicBody;
+
+	fixtureDef.shape = &dynamicBody;
+	fixtureDef.density = 0.3f;
+	fixtureDef.friction = 0.5f;
+
+	//TODO Find a way to get rid of this. We want it to be dynamic.
+	dynamicBody.SetAsBox((72/2)/32, (97/2)/32);
+
+	body = w.CreateBody(&bodyDef);
+	body->CreateFixture(&fixtureDef);
+
 }
 
 void Object::update()
