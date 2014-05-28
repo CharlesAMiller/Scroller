@@ -13,6 +13,8 @@
 
 #include "Box2DDebugDrawer/Box2DDebugDrawer.h"
 
+#include "sub/b2toSf.hpp"
+
 #include "Object.hpp"
 
 #include "Player.hpp"
@@ -131,8 +133,8 @@ void createGround(b2World* w)
 	b2Body* body;
 	b2FixtureDef fixtureDef;
 
-	shape.Set(b2Vec2(0.0f, 5.0), b2Vec2(400/30.0f, 5.0f));
-	bodyDef.position.Set(100.0f/30, 400.0f/30);
+	shape.Set(b2Vec2(0.0f, 5.0), b2Vec2(toB2(400), 5.0f));
+	bodyDef.position.Set(toB2(400), -toB2(400));
 
 	body = w->CreateBody(&bodyDef);
 
@@ -143,6 +145,6 @@ void createGround(b2World* w)
 	t.setRepeated(true);
 	ground.setTexture(&t);
 
-	ground.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
+	ground.setPosition(getSfCoords(body->GetPosition()));
 }
 

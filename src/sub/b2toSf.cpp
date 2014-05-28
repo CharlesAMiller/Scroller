@@ -24,8 +24,8 @@ float toSf(float x){ return x*pixelsPerMeter; }
 b2Vec2 getB2Coords(sf::Vector2f position)
 {
 	b2Vec2 toReturn;
-	toReturn.x = position.x/pixelsPerMeter;
-	toReturn.y = position.y/pixelsPerMeter;
+	toReturn.x = toB2(position.x);
+	toReturn.y = -toB2(position.y);
 
 	return toReturn;
 }
@@ -33,8 +33,8 @@ b2Vec2 getB2Coords(sf::Vector2f position)
 sf::Vector2f getSfCoords(b2Vec2 position)
 {
 	sf::Vector2f toReturn;
-	toReturn.x = position.x*pixelsPerMeter;
-	toReturn.y = position.y*pixelsPerMeter;
+	toReturn.x = toSf(position.x);
+	toReturn.y = -toSf(position.y);
 
 	return toReturn;
 }

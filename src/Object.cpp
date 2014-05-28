@@ -24,11 +24,11 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p)
 	bodyDef.type = b2_dynamicBody;
 
 	if(p.x == 0)
-		bodyDef.position.Set(300.0f/30, -300.0f/30-n*5/30);
+		bodyDef.position.Set(toB2(300), -toB2(300.0f/30-n*5));
 	else
-		bodyDef.position.Set(p.x/30, p.y/30);
+		bodyDef.position.Set(toB2(p.x), -toB2(p.y));
 
-	dynamicBody.SetAsBox(10.0f/30, 10.0/30);
+	dynamicBody.SetAsBox(toB2(10.0f), toB2(10.0f));
 
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 0.3f;
@@ -64,11 +64,11 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	bodyDef.type = b2_dynamicBody;
 
 	if(pos.x == 0)
-		bodyDef.position.Set(300.0f/30, -300.0f/30-n*5/30);
+		bodyDef.position.Set(toB2(300), -toB2(300));
 	else
-		bodyDef.position.Set(pos.x/30, pos.y/30);
+		bodyDef.position.Set(toB2(pos.x), -toB2(pos.y));
 
-	dynamicBody.SetAsBox((objectTexture.getSize().x/2)/32, (objectTexture.getSize().y/2)/32);
+	dynamicBody.SetAsBox(toB2((objectTexture.getSize().x/2)), toB2((objectTexture.getSize().y/2)));
 
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 0.3f;
@@ -92,7 +92,7 @@ Object::Object(b2World& w, sf::Vector2f pos)
 	fixtureDef.friction = 0.5f;
 
 	//TODO Find a way to get rid of this. We want it to be dynamic.
-	dynamicBody.SetAsBox((72/2)/32, (97/2)/32);
+	dynamicBody.SetAsBox(toB2(72/2), toB2(97/2));
 
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
@@ -101,7 +101,7 @@ Object::Object(b2World& w, sf::Vector2f pos)
 
 void Object::update()
 {
-	shape.setPosition(body->GetPosition().x*30, body->GetPosition().y*30);
+	shape.setPosition(getSfCoords(body->GetPosition()));
 	shape.setRotation(getAngleDegrees(body->GetAngle()));
 }
 
