@@ -26,7 +26,7 @@ void Box2DDebugDrawer::DrawPolygon(const b2Vec2* vertices,
 	shape.setFillColor(sf::Color(0, 0, 0, 0));
 	shape.setOutlineThickness(1);
 	for(unsigned int i  = 0; i < vertexCount; i++)
-		shape.setPoint(i, sf::Vector2f(vertices[i].x*32, -(vertices[i].y*32)));
+		shape.setPoint(i, getSfCoords(b2Vec2(vertices[i].x, vertices[i].y)));
 
 	win->draw(shape);
 
@@ -46,7 +46,7 @@ void Box2DDebugDrawer::DrawSolidPolygon(const b2Vec2* vertices,
 	shape.setFillColor(shapeColor);
 
 	for(unsigned int i  = 0; i < vertexCount; i++)
-		shape.setPoint(i, sf::Vector2f(vertices[i].x*32, -(vertices[i].y*32)));
+		shape.setPoint(i, getSfCoords(b2Vec2(vertices[i].x, vertices[i].y)));
 
 	win->draw(shape);
 
@@ -56,11 +56,11 @@ void Box2DDebugDrawer::DrawCircle(const b2Vec2& center,
 		float32 radius,
 		const b2Color& color)
 {
-	float pixelRadius = radius*32;
+	float pixelRadius = toSf(radius);
 
 	sf::CircleShape shape(pixelRadius);
 	shape.setOrigin(pixelRadius, pixelRadius);
-	shape.setPosition(sf::Vector2f(center.x*32, -(center.y*32)));
+	shape.setPosition(getSfCoords(center));
 
 	sf::Color shapeColor = b2ColorToSFColor(color);
 	shape.setOutlineColor(shapeColor);
@@ -76,11 +76,11 @@ void Box2DDebugDrawer::DrawSolidCircle(const b2Vec2& center,
 		const b2Vec2& axis,
 		const b2Color& color)
 {
-	float pixelRadius = radius*32;
+	float pixelRadius = toSf(radius);
 
 	sf::CircleShape shape(pixelRadius);
 	shape.setOrigin(pixelRadius, pixelRadius);
-	shape.setPosition(sf::Vector2f(center.x*32, -(center.y*32)));
+	shape.setPosition(getSfCoords(center));
 
 	sf::Color shapeColor = b2ColorToSFColor(color);
 	shape.setOutlineColor(shapeColor);
@@ -104,8 +104,8 @@ void Box2DDebugDrawer::DrawSegment(const b2Vec2& p1,
 
 	sf::Color segmentColor = b2ColorToSFColor(color);
 
-	segment[0] = sf::Vertex(sf::Vector2f(p1.x*32, -(p1.y*32)), segmentColor);
-	segment[1] = sf::Vertex(sf::Vector2f(p2.x*32, -(p2.y*32)), segmentColor);
+	segment[0] = sf::Vertex(getSfCoords(p1), segmentColor);
+	segment[1] = sf::Vertex(getSfCoords(p2), segmentColor);
 
 	win->draw(segment);
 

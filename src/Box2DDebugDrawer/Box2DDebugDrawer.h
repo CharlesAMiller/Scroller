@@ -26,6 +26,8 @@
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
 
+#include "../sub/b2toSf.hpp"
+
 class Box2DDebugDrawer : public b2Draw
 {
 public:

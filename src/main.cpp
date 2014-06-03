@@ -16,8 +16,9 @@
 #include "sub/b2toSf.hpp"
 
 #include "Object.hpp"
-
 #include "Player.hpp"
+
+#include "Terrain/Terrains.hpp"
 
 sf::RectangleShape ground;
 
@@ -38,7 +39,7 @@ int main()
 
 	sf::Event event;
 
-	b2Vec2 gravity (0.0f, 9.8f);
+	b2Vec2 gravity (0.0f, -9.8f);
 	b2World world(gravity);
 
 
@@ -46,35 +47,45 @@ int main()
 
 	world.SetDebugDraw(&drawer);
 
+	bool debug = false;
+
 	sf::View v(sf::Vector2f(400, 300), sf::Vector2f(800, 600));
 
 	app.setView(v);
 
 	sf::Texture backgroundTexture;
-	backgroundTexture.loadFromFile("res/bg_castle.png");
+	backgroundTexture.loadFromFile("res/bg.png");
 	backgroundTexture.setRepeated(true);
 
 	sf::RectangleShape backgroundShape;
 	backgroundShape.setTexture(&backgroundTexture);
-	backgroundShape.setSize(sf::Vector2f(1000, 800));
+	backgroundShape.setSize(sf::Vector2f(4000, 4000));
+	backgroundShape.setOrigin(sf::Vector2f(2000, 2000));
 	backgroundShape.setPosition(sf::Vector2f(0, 0));
 
 	std::vector<Object*> objects;
 
-	createGround(&world);
+	std::vector<Terrain*> environment;
 
-	const int boxes = 0;
+	//createGround(&world);
+
+	Grass g1("res/grass.png", world, sf::Vector2f(1400, 70), sf::Vector2f(40,400));
+
+	environment.push_back(&g1);
+
+	const int boxes = 10;
 	for(unsigned int i = 0; i < boxes; i++)
 	{
-		//Object* o = new Object(sf::Vector2f(20,20), sf::Color::Green, world);
 		Object* o = new Object("res/box.png", world);
 		objects.push_back(o);
 	}
 
+
 	//Player p ("res/player.png", world, sf::Vector2f(50,0));
 
 	Player p("res/player.png", world, sf::Vector2f(50,0));
-	//Player p(sf::Vector2f(20,20), sf::Color::Magenta, world);
+
+	//Player p(sf::Vector2f(10,10), sf::Color::Magenta, world);
 
 	float step = 1/60.0f;
 	while(app.isOpen())
@@ -101,6 +112,10 @@ int main()
 
 		app.draw(backgroundShape);
 
+		for(unsigned int i = 0; i < environment.size(); i++)
+		{
+			environment.at(i)->draw(app);
+		}
 		for(unsigned int i = 0; i < objects.size(); i++)
 		{
 			objects.at(i)->draw(app);
@@ -117,6 +132,7 @@ int main()
 
 		app.draw(ground);
 
+		if(debug)
 		world.DrawDebugData();
 
 		app.display();

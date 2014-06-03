@@ -94,6 +94,8 @@ Object::Object(b2World& w, sf::Vector2f pos)
 	//TODO Find a way to get rid of this. We want it to be dynamic.
 	dynamicBody.SetAsBox(toB2(72/2), toB2(97/2));
 
+	bodyDef.fixedRotation = true;
+
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
 
@@ -102,7 +104,7 @@ Object::Object(b2World& w, sf::Vector2f pos)
 void Object::update()
 {
 	shape.setPosition(getSfCoords(body->GetPosition()));
-	shape.setRotation(getAngleDegrees(body->GetAngle()));
+	shape.setRotation(-getAngleDegrees(body->GetAngle()));
 }
 
 void Object::draw(sf::RenderWindow& app)

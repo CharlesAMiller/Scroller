@@ -11,6 +11,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+#include "Base.hpp"
+
+#include "sub/b2toSf.hpp"
 
 enum terrainType
 {
@@ -23,11 +26,23 @@ class Terrain
 {
 public:
 
-	Terrain();
+	Terrain(b2World& w, sf::Vector2f s, sf::Vector2f p);
 
-	terrainType getType();
+	virtual terrainType getType();
+
+	virtual void update();
+
+	virtual void draw(sf::RenderWindow& app);
 
 	virtual ~Terrain();
+
+protected:
+
+	Body m_body;
+
+private:
+
+	terrainType m_type;
 
 };
 
