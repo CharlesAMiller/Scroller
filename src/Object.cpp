@@ -71,8 +71,9 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	dynamicBody.SetAsBox(toB2((objectTexture.getSize().x/2)), toB2((objectTexture.getSize().y/2)));
 
 	fixtureDef.shape = &dynamicBody;
-	fixtureDef.density = 0.3f;
-	fixtureDef.friction = 0.5f;
+	fixtureDef.density = 0.85f;
+	//fixtureDef.restitution = 0.01f;
+	fixtureDef.friction = 0.8f;
 
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
@@ -92,7 +93,7 @@ Object::Object(b2World& w, sf::Vector2f pos)
 	fixtureDef.friction = 0.5f;
 
 	//TODO Find a way to get rid of this. We want it to be dynamic.
-	dynamicBody.SetAsBox(toB2(72/2), toB2(97/2));
+	dynamicBody.SetAsBox(toB2(34/2), toB2(97/2));
 
 	bodyDef.fixedRotation = true;
 

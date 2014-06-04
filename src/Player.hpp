@@ -32,6 +32,8 @@ public:
 
 	sf::Clock timer;
 
+	sf::Clock jumptimer;
+
 private:
 
 	static sf::Texture playerTexture;

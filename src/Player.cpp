@@ -40,12 +40,13 @@ Player::Player(std::string pa, b2World& w, sf::Vector2f pos):
 void Player::update(sf::Event e)
 {
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	float vMod, temp = 0;
+	bool toJump = false;
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && jumptimer.getElapsedTime().asSeconds() > .2)
 	{
-		if(body->GetLinearVelocity().y > -1.5)
-		{
-			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, 8));
-		}
+		timer.restart();
+		jumptimer.restart();
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
@@ -62,14 +63,42 @@ void Player::update(sf::Event e)
 		dynamicBody.SetAsBox((shape.getSize().x/2)/30, ((shape.getSize().y/2)/30) - objectTexture.getSize().y*.2);
 	}
 
-	else if(e.type == sf::Event::KeyReleased)
+	if(e.type == sf::Event::KeyReleased)
 	{
 		if(e.key.code == sf::Keyboard::Left || e.key.code == sf::Keyboard::Right)
 		{
 			body->SetLinearVelocity(b2Vec2(0, body->GetLinearVelocity().y));
 		}
+
+		if(e.key.code == sf::Keyboard::Up)
+		{
+			temp = timer.getElapsedTime().asSeconds();
+			toJump = true;
+		}
+
 	}
 
+
+	if(toJump)
+	{
+		if(temp < .35)
+		{
+			vMod = .33;
+		}
+		else if(temp > .35 && temp < .8)
+		{
+			vMod = .75;
+		}
+		else if(temp > .8)
+		{
+			vMod = 1;
+		}
+
+		//TODO Make a variable for maxHeight;
+		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, 8 * vMod));
+
+		toJump = false;
+	}
 
 	shape.setPosition(getSfCoords(body->GetPosition()));
 	//shape.setRotation(getAngleDegrees(body->GetAngle()));
