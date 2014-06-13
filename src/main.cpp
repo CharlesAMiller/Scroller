@@ -20,6 +20,8 @@
 
 #include "Terrain/Terrains.hpp"
 
+#include "Map.hpp"
+
 sf::RectangleShape ground;
 
 sf::Texture t;
@@ -28,6 +30,7 @@ void createGround(b2World* w);
 
 int main()
 {
+
 	t.loadFromFile("res/grass.png");
 
 	sf::ContextSettings cs;
@@ -67,11 +70,16 @@ int main()
 
 	std::vector<Terrain*> environment;
 
+	Map m("map.png");
+
+	m.load();
+	m.populate(world, environment);
+
 	//createGround(&world);
 
-	Grass g1("res/grass.png", world, sf::Vector2f(1400, 70), sf::Vector2f(40,400));
+	//Grass g1("res/grass.png", world, sf::Vector2f(1400, 70), sf::Vector2f(40,400));
 
-	environment.push_back(&g1);
+	//environment.push_back(&g1);
 
 	const int boxes = 10;
 	for(unsigned int i = 0; i < boxes; i++)

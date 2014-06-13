@@ -81,22 +81,13 @@ void Player::update(sf::Event e)
 
 	if(toJump)
 	{
-		if(temp < .35)
-		{
-			vMod = .33;
-		}
-		else if(temp > .35 && temp < .8)
-		{
-			vMod = .75;
-		}
-		else if(temp > .8)
-		{
-			vMod = 1;
-		}
+
+		vMod = 1;
 
 		//TODO Make a variable for maxHeight;
 		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, 8 * vMod));
 
+		jumptimer.restart();
 		toJump = false;
 	}
 

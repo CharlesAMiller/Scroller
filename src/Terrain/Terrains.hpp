@@ -9,7 +9,6 @@
 #define TERRAINS_HPP_
 
 #include "Grass.hpp"
-
-
+#include "Ice.hpp"
 
 #endif /* TERRAINS_HPP_ */

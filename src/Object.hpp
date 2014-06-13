@@ -14,20 +14,6 @@
 #include <Box2D/Box2D.h>
 #include "sub/b2toSf.hpp"
 
-enum class objectType
-{
-	box,
-	circle,
-	edge,
-	complex
-};
-
-struct shape
-{
-	objectType type;
-
-};
-
 class Object
 {
 
