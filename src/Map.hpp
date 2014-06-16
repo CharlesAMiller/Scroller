@@ -30,6 +30,9 @@ public:
 
 private:
 
+	std::vector<sf::Color> mapVals;
+
+	//TODO: Fix this piece of shit.
 	std::map<sf::Color, int> pixelMap;
 
 	std::string m_p;

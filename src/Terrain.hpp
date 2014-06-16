@@ -28,6 +28,8 @@ public:
 
 	Terrain(b2World& w, sf::Vector2f s, sf::Vector2f p);
 
+	Terrain(b2World& w, sf::Vector2f s, sf::Vector2f p, float32 f);
+
 	virtual terrainType getType();
 
 	virtual void update();
@@ -41,6 +43,8 @@ protected:
 	Body m_body;
 
 private:
+
+	sf::Color m_pixelVal;
 
 	terrainType m_type;
 

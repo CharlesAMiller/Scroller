@@ -16,6 +16,8 @@ public:
 
 	Grass(std::string pa, b2World& w, sf::Vector2f s, sf::Vector2f p, bool repeatTexture = true);
 
+	//Grass(b2World& w, sf::Vector2f s, sf::Vector2f p, bool repeatTexture = true);
+
 	~Grass();
 
 	terrainType getType();
