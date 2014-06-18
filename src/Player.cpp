@@ -45,18 +45,19 @@ void Player::update(sf::Event e)
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && jumptimer.getElapsedTime().asSeconds() > .2)
 	{
-		timer.restart();
+		//timer.restart();
+		body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, body->GetLinearVelocity().y + 8));
 		jumptimer.restart();
-	}
-	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		if(body->GetLinearVelocity().x > -12)
-			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x - 2, body->GetLinearVelocity().y));
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		if(body->GetLinearVelocity().x < 12)
 			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x + 2, body->GetLinearVelocity().y));
+	}
+	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
+		if(body->GetLinearVelocity().x > -12)
+			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x - 2, body->GetLinearVelocity().y));
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
@@ -70,11 +71,11 @@ void Player::update(sf::Event e)
 			body->SetLinearVelocity(b2Vec2(0, body->GetLinearVelocity().y));
 		}
 
-		if(e.key.code == sf::Keyboard::Up)
+		/*if(e.key.code == sf::Keyboard::Up)
 		{
 			temp = timer.getElapsedTime().asSeconds();
 			toJump = true;
-		}
+		}*/
 
 	}
 

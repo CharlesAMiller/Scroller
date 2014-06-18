@@ -26,8 +26,6 @@ sf::RectangleShape ground;
 
 sf::Texture t;
 
-void createGround(b2World* w);
-
 int main()
 {
 
@@ -74,12 +72,6 @@ int main()
 
 	m.load();
 	m.populate(world, environment);
-
-	//createGround(&world);
-
-	//Grass g1("res/grass.png", world, sf::Vector2f(1400, 70), sf::Vector2f(40,400));
-
-	//environment.push_back(&g1);
 
 	const int boxes = 10;
 	for(unsigned int i = 0; i < boxes; i++)
@@ -149,26 +141,3 @@ int main()
 	}
 
 }
-
-void createGround(b2World* w)
-{
-	b2BodyDef bodyDef;
-	b2EdgeShape shape;
-	b2Body* body;
-	b2FixtureDef fixtureDef;
-
-	shape.Set(b2Vec2(0.0f, 5.0), b2Vec2(toB2(400), 5.0f));
-	bodyDef.position.Set(toB2(400), -toB2(400));
-
-	body = w->CreateBody(&bodyDef);
-
-	body->CreateFixture(&shape, 0.0f);
-
-	ground.setSize(sf::Vector2f(770, 70));
-
-	t.setRepeated(true);
-	ground.setTexture(&t);
-
-	ground.setPosition(getSfCoords(body->GetPosition()));
-}
-

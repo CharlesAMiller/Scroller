@@ -18,9 +18,24 @@ public:
 	//	Sprite, Texture incrimentation
 	Model(sf::RectangleShape& s, sf::Vector2u i = sf::Vector2u(70, 0));
 
+	Model(std::vector<std::string> p);
+
+	~Model();
+
+	//Model()
+
+	void next();
+
+	void previous();
+
+
 private:
 
-	std::vector<sf::Texture> t;
+	std::vector<sf::Texture&> t;
+
+	sf::Vector2u m_i;
+
+
 };
 
 
