@@ -22,11 +22,16 @@ Map::Map(std::string p)
 	//terrainMap[2] = ice;
 
 	//	Air & Default
-	mapVals.push_back(sf::Color(0,0,0));
+	mapVals.push_back(sf::Color(255,255,255));
 	//	Grass
 	mapVals.push_back(sf::Color(34, 177, 76));
 	// Ice
 	mapVals.push_back(sf::Color(153, 217, 234));
+
+	mapVals.push_back(sf::Color(185, 122, 87));
+
+	/*	Players  */
+	//mapVals.push_back(sf::Color(139, 207, 186));
 
 	m_p = p;
 }
@@ -39,11 +44,10 @@ void Map::load()
 
 	mapSize = m_image.getSize();
 
-	for(unsigned int i = 0; i < m_image.getSize().y; i++)
+	for(unsigned int i = mapSize.y; i > 0; i--)
 	{
-		for(unsigned int j = 0; j < m_image.getSize().x; j++)
+		for(unsigned int j = mapSize.x; j > 0; j--)
 		{
-
 			sf::Color pixel = m_image.getPixel(j, i);
 
 			for(unsigned int l = 0; l < mapVals.size(); l++)
@@ -52,46 +56,84 @@ void Map::load()
 				{
 					m_map.push_back(l);
 				}
-				else if(l > 1)
-				{
-					m_map.push_back(0);
-				}
 
+				//std::cout << "i " << i << "j " << j << "l " << l << "\n";
 			}
 		}
 	}
 }
 
-void Map::populate(b2World& w, std::vector<Terrain*>& t)
+void Map::populate(b2World& w, std::vector<Terrain*>& t, std::vector<Object*>& ot)
 {
-	unsigned int x = 0 ,y = 0, temp = 0;
 
-	for(unsigned int i = 0; i < m_map.size(); i++)
+	unsigned int x, y, z = 0;
+
+	std::cout << "size" << m_map.size() << "\n";
+
+	for(unsigned int j = m_map.size()- 1; j > 0; j--)
 	{
-		temp++;
+		x++;
 
-		if(temp > mapSize.x)
+		if(x == mapSize.x)
 		{
 			y++;
-			temp = 0;
+			x = 0;
 		}
 
-		x = temp;
+		std::vector<std::vector<unsigned int> > consecutiveTiles;
 
-		if(m_map[i] == 1)
+		int tempY = 0;
+
+		if(j > 0)
+		{
+
+			//std::cout << "Val: " << j << "Last Val: " << m_map.at(j-1) << "\n";
+
+			//Compare at the map value. DO NOT compare 'j' to anything. That's dumb.
+			if(m_map.at(j) == m_map.at(j-1) && tempY == y)
+			{
+				std::cout << consecutiveTiles.size();
+				//consecutiveTiles.at(consecutiveTiles.size()-1)->push_back()
+			}
+			else
+			{
+				std::vector<unsigned int> sub; sub.push_back(j);
+				consecutiveTiles.push_back(sub);
+			}
+		}
+		else
+		{
+			std::vector<unsigned int> sub; sub.push_back(j);
+			consecutiveTiles.push_back(sub);
+		}
+
+		//std::cout << consecutiveTiles.size() << "\n";
+		tempY = y;
+
+		if(m_map[j] == 1)
 		{
 			Grass* g = new Grass("res/grass.png", w , sf::Vector2f(70, 70), sf::Vector2f(x*70, y*70), true);
 			t.push_back(g);
+
+			std::cout << "Grass\n";
 		}
 
-		if(m_map[i] == 2)
+		else if(m_map[j] == 2)
 		{
 			Ice* i = new Ice("res/ice.png", w , sf::Vector2f(70, 70), sf::Vector2f(x*70, y*70), true);
 			t.push_back(i);
+
+			//std::cout << "Ice\n";
 		}
 
+		else if(m_map[j] == 3)
+		{
+			Object* o = new Object("res/box.png", w, b2Shape::e_polygon, sf::Vector2f(x*70, y*70));
+			ot.push_back(o);
+		}
 
 	}
+
 }
 
 Map::~Map(){}

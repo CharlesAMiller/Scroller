@@ -19,6 +19,11 @@ union value
 	//std::string s;
 };
 
+std::pair<std::string, std::string> splitLine(std::string line, size_t split);
+
+/* Conversion */
+
+//TODO: Make these a little less wtf
 float asFloat(std::string key);
 
 unsigned int asUint(std::string key);

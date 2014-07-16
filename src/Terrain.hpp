@@ -19,7 +19,8 @@ enum terrainType
 {
 	grass,
 	ice,
-	lava
+	lava,
+	generic
 };
 
 class Terrain

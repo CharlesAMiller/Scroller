@@ -43,7 +43,7 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p)
 	hitbox.setOutlineThickness(1);
 }
 
-Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
+Object::Object(std::string pa, b2World& w, b2Shape::Type t, sf::Vector2f pos)
 {
 
 	static bool isLoaded = false;
@@ -61,6 +61,16 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 
 	shape.setOrigin(objectTexture.getSize().x/2, objectTexture.getSize().y/2);
 
+
+	//switch(t)
+	//{
+		//Circle
+		//case 0:
+			//fixtureDef.shape = new b2CircleShape;
+
+
+	//}
+
 	bodyDef.type = b2_dynamicBody;
 
 	if(pos.x == 0)
@@ -68,12 +78,12 @@ Object::Object(std::string pa, b2World& w, sf::Vector2f pos)
 	else
 		bodyDef.position.Set(toB2(pos.x), -toB2(pos.y));
 
-	dynamicBody.SetAsBox(toB2((objectTexture.getSize().x/2)), toB2((objectTexture.getSize().y/2)));
+	dynamicBody.SetAsBox(toB2((objectTexture.getSize().x/2)-1), toB2((objectTexture.getSize().y/2)));
 
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 0.85f;
 	//fixtureDef.restitution = 0.01f;
-	fixtureDef.friction = 0.8f;
+	fixtureDef.friction = 0.5f;
 
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
@@ -95,6 +105,8 @@ Object::Object(b2World& w, sf::Vector2f pos)
 	//TODO Find a way to get rid of this. We want it to be dynamic.
 	dynamicBody.SetAsBox(toB2(34/2), toB2(97/2));
 
+	//bodyDef.position = b2Vec2(toB2(0), toB2(10000));
+
 	bodyDef.fixedRotation = true;
 
 	body = w.CreateBody(&bodyDef);
@@ -111,10 +123,6 @@ void Object::update()
 void Object::draw(sf::RenderWindow& app)
 {
 	app.draw(shape);
-	if(debug)
-	{
-		app.draw(hitbox);
-	}
 }
 
 Object::~Object(){}

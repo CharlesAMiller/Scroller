@@ -5,18 +5,27 @@
  *      Author: Charles Miller
  */
 
-#include "Parse.hpp"
+#include "parse.hpp"
 
 std::map<std::string, value> parse(File& f)
 {
 	std::map<std::string, value> toReturn;
 
-	for(unsigned int i = 0; i < f.getNumberOfLines(); i++)
+	for(unsigned int i = 0; i < f.getLength(); i++)
 	{
-		std::cout << "Implement me";
+		if(f.lineContains(i, "="))
+		{
+
+		}
 	}
 
 	return toReturn;
 }
 
+std::pair<std::string, std::string> splitLine(std::string line, size_t split)
+{
+	std::pair<std::string, std::string> toReturn;
+
+	return toReturn;
+}
 

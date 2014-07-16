@@ -14,6 +14,8 @@
 
 #include "Terrain/Terrains.hpp"
 
+#include "Object.hpp"
+
 #include <map>
 
 class Map
@@ -26,7 +28,9 @@ public:
 
 	void load();
 
-	void populate(b2World& w, std::vector<Terrain*>& t);
+	sf::Vector2f getPlayerSpawn();
+
+	void populate(b2World& w, std::vector<Terrain*>& t, std::vector<Object*>& o);
 
 private:
 

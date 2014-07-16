@@ -10,6 +10,8 @@
 
 Terrain::Terrain(b2World& w, sf::Vector2f s, sf::Vector2f p)
 {
+	m_type = generic;
+
 	m_body.bodyDef.position = getB2Coords(p);
 
 	m_body.body = w.CreateBody(&m_body.bodyDef);
@@ -21,6 +23,8 @@ Terrain::Terrain(b2World& w, sf::Vector2f s, sf::Vector2f p)
 
 Terrain::Terrain(b2World& w, sf::Vector2f s, sf::Vector2f p, float32 f)
 {
+	m_type = generic;
+
 	m_body.bodyDef.position = getB2Coords(p);
 
 	m_body.body = w.CreateBody(&m_body.bodyDef);

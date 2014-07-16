@@ -13,14 +13,16 @@
 
 #include "Object.hpp"
 
+#include "XboxController.h"
+
 class Player : Object
 {
 
 public:
 
-	Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p = sf::Vector2f(0,0));
+	Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p = sf::Vector2f(0,1000));
 
-	Player(std::string pa, b2World& w, sf::Vector2f pos = sf::Vector2f(0,0));
+	Player(std::string pa, b2World& w, sf::Vector2f pos = sf::Vector2f(0,10000));
 
 	virtual void update(sf::Event e);
 
@@ -36,7 +38,19 @@ public:
 
 private:
 
+	Animation m_anim, walkingAnim;
+
+	bool right, left;
+
+	unsigned int curFrame;
+
 	static sf::Texture playerTexture;
+
+	static sf::Texture playerSpriteSheet;
+
+	AnimatedSprite m_sprite;
+
+	XboxController xbox;
 
 };
 
