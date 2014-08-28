@@ -10,7 +10,7 @@
 Game::Game():
 	//Set the antialiasing of the Context Settings
 	cs(0, 0, 16, 2, 0),
-	app(sf::VideoMode(800, 600, 32), "Scroller", sf::Style::Default, cs),
+	app(sf::VideoMode(800, 600, 32), "Scroller", sf::Style::Close, cs),
 
 	world(b2Vec2(0.0f, -19.6f)),
 
@@ -23,9 +23,12 @@ Game::Game():
 	m("map.png")
 
 {
+
 		app.setFramerateLimit(60);
 
 		world.SetDebugDraw(&drawer);
+
+		world.SetContactListener(&cl);
 
 		app.setView(v);
 
@@ -75,7 +78,7 @@ void Game::update()
 		environment.at(i)->update();
 	}
 
-	if(moveWith){	v.setCenter(p.getShape().getPosition());	}
+	if(moveWith){	v.setCenter(p.getPosition());	}
 
 }
 

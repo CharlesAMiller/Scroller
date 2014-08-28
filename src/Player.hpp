@@ -13,6 +13,8 @@
 
 #include "Object.hpp"
 
+#include "AnimatedSprite.h"
+
 #include "XboxController.h"
 
 class Player : Object
@@ -28,7 +30,9 @@ public:
 
 	virtual void draw(sf::RenderWindow& app);
 
-	virtual sf::RectangleShape getShape();
+	virtual sf::Vector2f getPosition();
+
+	virtual unsigned int getType();
 
 	virtual ~Player();
 
@@ -36,21 +40,22 @@ public:
 
 	sf::Clock jumptimer;
 
+	sf::Clock animTimer;
+
+	XboxController xbox;
+
+
 private:
 
 	Animation m_anim, walkingAnim;
 
 	bool right, left;
 
-	unsigned int curFrame;
-
 	static sf::Texture playerTexture;
 
 	static sf::Texture playerSpriteSheet;
 
 	AnimatedSprite m_sprite;
-
-	XboxController xbox;
 
 };
 

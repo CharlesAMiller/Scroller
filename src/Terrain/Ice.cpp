@@ -29,8 +29,6 @@ Ice::Ice(std::string pa, b2World& w, sf::Vector2f s, sf::Vector2f p, bool repeat
 	m_body.shape.setPosition(p);
 	m_body.shape.setOrigin(m_body.shape.getSize().x/2, m_body.shape.getSize().y/2);
 
-	//m_pixelVal = sf::Color(34, 177, 176);
-
 }
 
 terrainType Ice::getType()

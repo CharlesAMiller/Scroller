@@ -1,6 +1,4 @@
 #include "XboxController.h"
-#include <SFML/Window/Joystick.hpp>
-#include <math.h>
 
 XboxController::XboxController(uint32_t com, float deadband, float threshHold)
 {
@@ -116,7 +114,6 @@ float XboxController::rightStickX()
 
 	}
 
-	std::cout << "lolwut";
 	return x;
 
 }
@@ -303,7 +300,7 @@ bool XboxController::buttonXbox()
 
 }
 
-void XboxController::vibrate(float left, float right)
+/*void XboxController::vibrate(float left, float right)
 {
 	/*
 	XINPUT_VIBRATION vibration;
@@ -311,6 +308,5 @@ void XboxController::vibrate(float left, float right)
 	vibration.wLeftMotorSpeed = (WORD)(left*65535);
 	vibration.wRightMotorSpeed = (WORD)(right*65535);
 	XInputSetState(m_com, &vibration);
-	*/
     //TODO: this
-}
+}*/

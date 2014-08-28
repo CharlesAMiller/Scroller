@@ -9,18 +9,6 @@
 
 Map::Map(std::string p)
 {
-
-	//std::map<int, sf::Color, VectorComparator> pixelMap;
-
-	//pixelMap[sf::Color(1,1,1)] = 1;
-	//pixelMap.insert(std::pair<sf::Color, int>(sf::Color(1,1,1), 1));
-
-	//pixelMap[2] = 1;
-	//pixelMap[3] = 2;
-
-	//terrainMap[1] = grass;
-	//terrainMap[2] = ice;
-
 	//	Air & Default
 	mapVals.push_back(sf::Color(255,255,255));
 	//	Grass
@@ -57,7 +45,6 @@ void Map::load()
 					m_map.push_back(l);
 				}
 
-				//std::cout << "i " << i << "j " << j << "l " << l << "\n";
 			}
 		}
 	}

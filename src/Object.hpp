@@ -11,10 +11,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "AnimatedSprite.h"
-
 #include <Box2D/Box2D.h>
 #include "sub/b2toSf.hpp"
+
+enum objectType
+{
+	none,
+	player,
+	terrain,
+	box
+};
 
 class Object
 {
@@ -37,6 +43,10 @@ public:
 
 	virtual sf::RectangleShape getShape();
 
+	virtual sf::Vector2f getPosition();
+
+	virtual unsigned int getType();
+
 	virtual ~Object();
 
 	sf::RectangleShape shape, hitbox;
@@ -58,8 +68,11 @@ public:
 
 	b2FixtureDef fixtureDef;
 
-private:
+protected:
 
+	objectType m_type;
+
+private:
 
 };
 

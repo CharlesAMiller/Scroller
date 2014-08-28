@@ -14,6 +14,9 @@ sf::Texture Object::objectTexture;
 Object::Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p)
 {
 
+	objectType t = player;
+	m_type = t;
+
 	n++;
 
 	shape.setSize(s);
@@ -43,7 +46,7 @@ Object::Object(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p)
 	hitbox.setOutlineThickness(1);
 }
 
-Object::Object(std::string pa, b2World& w, b2Shape::Type t, sf::Vector2f pos)
+Object::Object(std::string pa, b2World& w, b2Shape::Type, sf::Vector2f pos)
 {
 
 	static bool isLoaded = false;
@@ -60,16 +63,6 @@ Object::Object(std::string pa, b2World& w, b2Shape::Type t, sf::Vector2f pos)
 	shape.setTexture(&objectTexture);
 
 	shape.setOrigin(objectTexture.getSize().x/2, objectTexture.getSize().y/2);
-
-
-	//switch(t)
-	//{
-		//Circle
-		//case 0:
-			//fixtureDef.shape = new b2CircleShape;
-
-
-	//}
 
 	bodyDef.type = b2_dynamicBody;
 
@@ -88,16 +81,15 @@ Object::Object(std::string pa, b2World& w, b2Shape::Type t, sf::Vector2f pos)
 	body = w.CreateBody(&bodyDef);
 	body->CreateFixture(&fixtureDef);
 
-	hitbox.setSize(shape.getSize());
-	hitbox.setOutlineColor(sf::Color::Red);
-	hitbox.setPosition(shape.getPosition());
-	hitbox.setOutlineThickness(1);
+	body->SetUserData(this);
+
 }
 
 Object::Object(b2World& w, sf::Vector2f pos)
 {
 	bodyDef.type = b2_dynamicBody;
 
+	fixtureDef.restitution = 0.0f;
 	fixtureDef.shape = &dynamicBody;
 	fixtureDef.density = 0.3f;
 	fixtureDef.friction = 0.5f;
@@ -120,9 +112,18 @@ void Object::update()
 	shape.setRotation(-getAngleDegrees(body->GetAngle()));
 }
 
+sf::Vector2f Object::getPosition()
+{
+	return shape.getPosition();
+}
 void Object::draw(sf::RenderWindow& app)
 {
 	app.draw(shape);
+}
+
+unsigned int Object::getType()
+{
+	return m_type;
 }
 
 Object::~Object(){}

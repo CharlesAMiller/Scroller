@@ -29,8 +29,8 @@ contact: hdmscratched@gmail.com
 */
 
 #include <stdint.h>
-#include <XInput.h>
-#include "iostream"
+#include <SFML/Window/Joystick.hpp>
+#include <math.h>
 
 /**XboxController class.
  */
@@ -42,7 +42,7 @@ public:
 	 * @param deadband is the joystick deadband.
 	 * @param threshHold is the trigger threshHold.
 	 */
-	XboxController(uint32_t com = 0, float deadband = 0.1f, float threshHold = 0.2f);
+	XboxController(uint32_t com = 1, float deadband = 0.1f, float threshHold = 0.2f);
 
 	/**XboxController deconstructor.
 	 */
@@ -200,7 +200,7 @@ public:
 	 * @param left the left motor rumble value.
 	 * @param right the right motor rumble value.
 	 */
-	void vibrate(float left = 0.5f, float right = 0.5f);
+	//void vibrate(float left = 0.5f, float right = 0.5f);
 
 private:
 	uint32_t m_com; ///< the communication port of the controller.

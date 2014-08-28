@@ -13,13 +13,14 @@ sf::Texture Player::playerSpriteSheet;
 
 Player::Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p):
 	Object(s, c, w, p),
-	m_anim(),
-	xbox(0)
+	m_anim()
 {
 	timer.restart();
 
 	//Player specific
 	bodyDef.fixedRotation = true;
+
+	animTimer.restart();
 
 	left = false;
 	right = false;
@@ -27,115 +28,102 @@ Player::Player(sf::Vector2f s, sf::Color c, b2World& w, sf::Vector2f p):
 }
 
 Player::Player(std::string pa, b2World& w, sf::Vector2f pos):
-	Object(w, pos),
-	m_anim(),
-	m_sprite(),
-	xbox(0)
+	Object(w, pos)
 {
 	timer.restart();
+
+	m_type = player;
 
 	//Player specific
 	bodyDef.fixedRotation = true;
 
-	playerTexture.loadFromFile("res/player.png");
-
-	shape.setTexture(&playerTexture);
-	shape.setSize(sf::Vector2f(playerTexture.getSize()));
-
-	shape.setOrigin(sf::Vector2f(playerTexture.getSize().x/2, playerTexture.getSize().y/2));
-
-
-	playerSpriteSheet.loadFromFile("p1_spritesheet.png");
-
-	//shape.setTexture(&playerSpriteSheet);
+	playerSpriteSheet.loadFromFile("res/p1_spritesheet.png");
 
 	walkingAnim.setSpriteSheet(playerSpriteSheet);
-	walkingAnim.addFrame(sf::IntRect(sf::Vector2i(72*2, 97), sf::Vector2i(72, 97)));
-	walkingAnim.addFrame(sf::IntRect(sf::Vector2i(72*3, 97), sf::Vector2i(72, 97)));
 
-	curFrame = 0;
+	walkingAnim.addFrame(sf::IntRect(288, 0, 72, 97));
+	walkingAnim.addFrame(sf::IntRect(145, 0, 72, 97));
+	walkingAnim.addFrame(sf::IntRect(217, 0, 72, 97));
 
-	m_anim = walkingAnim;
+	m_sprite.setAnimation(walkingAnim);
 
-	m_sprite.setAnimation(m_anim);
+	m_sprite.setOrigin(sf::Vector2f(72/2, 97/2));
 
 	left = false;
 	right = false;
+
+	animTimer.restart();
+
+
+	body->SetUserData(this);
 }
 
 void Player::update(sf::Event e)
 {
 
-	sf::Clock animTimer;
-
 	float vMod;
 
 	bool toJump = false;
 
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && jumptimer.getElapsedTime().asSeconds() > .2)
-	{
+	bool runAnim;
 
-		if(body->GetLinearVelocity().y < 0.05 && body->GetLinearVelocity().y > -.05)
+	sf::Joystick::update();
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+		|| xbox.buttonA())
+	{
+		if(jumptimer.getElapsedTime().asSeconds() > .2)
 		{
-			body->ApplyForceToCenter(b2Vec2(0, 1000), true);
-			//body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, body->GetLinearVelocity().y + 12));
-			jumptimer.restart();
+
+			if(body->GetLinearVelocity().y < 0.05 && body->GetLinearVelocity().y > -.05)
+			{
+				body->ApplyForceToCenter(b2Vec2(0, 1000), true);
+				//body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x, body->GetLinearVelocity().y + 12));
+				jumptimer.restart();
+			}
+
 		}
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
-		|| xbox.leftStickX() > 0.35)
+		|| xbox.leftStickX() >= 0.45)
 	{
-		if(body->GetLinearVelocity().x < 12)
+		runAnim = true;
+
+		if(timer.getElapsedTime().asSeconds() > 0.2)
 		{
 			right = true;
-			body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x + 2, body->GetLinearVelocity().y));
+			//body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x + 2, body->GetLinearVelocity().y));
+			b2Vec2 newVelocity = b2Vec2(0.35 * 30 + (1 - 0.35) * body->GetLinearVelocity().x, body->GetLinearVelocity().y);
 
-			//shape.setScale(sf::Vector2f(1,1));
+			timer.restart();
 
-			if(animTimer.getElapsedTime().asSeconds() > .02)
-			{
-				if(curFrame < walkingAnim.getSize())
-				{
-					curFrame++;
-					//shape.setTextureRect(walkingAnim.getFrame(curFrame));
-				}
-				else
-				{
-					curFrame = 0;
-				}
-			}
-
+			body->SetLinearVelocity(newVelocity);
 		}
 
 	}
-	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		if(body->GetLinearVelocity().x > -12)
-		{
-			//body->SetLinearVelocity(iv);
-			left = true;
-			body->ApplyForceToCenter(b2Vec2(-100, 0), true);
-			//body->SetLinearVelocity(b2Vec2(body->GetLinearVelocity().x - 2, body->GetLinearVelocity().y));
-			//m_sprite.setScale(sf::Vector2f(-1, 1));
 
-			if(animTimer.getElapsedTime().asSeconds() > .02)
-			{
-				if(curFrame < walkingAnim.getSize())
-				{
-					curFrame++;
-					//shape.setTextureRect(walkingAnim.getFrame(curFrame));
-				}
-				else
-				{
-					curFrame = 0;
-				}
-			}
+	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+		|| xbox.leftStickX() <= -0.45)
+	{
+		runAnim = true;
+
+		if(timer.getElapsedTime().asSeconds() > 0.2)
+		{
+			left = true;
+
+			b2Vec2 newVelocity = b2Vec2(0.35 * -30 + (1 - 0.35) * body->GetLinearVelocity().x, body->GetLinearVelocity().y);
+
+			body->SetLinearVelocity(newVelocity);
 		}
 	}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
 		dynamicBody.SetAsBox((shape.getSize().x/2)/30, ((shape.getSize().y/2)/30) - objectTexture.getSize().y*.2);
 		fixtureDef.shape = &dynamicBody;
+	}
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		std::cout << "Player Velocity: " << body->GetLinearVelocity().x << "\n";
 	}
 
 	if(e.type == sf::Event::KeyReleased)
@@ -145,10 +133,12 @@ void Player::update(sf::Event e)
 			if(e.key.code == sf::Keyboard::Right)
 			{
 				right = false;
+				runAnim = false;
 			}
 			else if(e.key.code == sf::Keyboard::Left)
 			{
 				left = false;
+				runAnim = false;
 			}
 
 			if(right && !left)
@@ -165,11 +155,18 @@ void Player::update(sf::Event e)
 			}
 		}
 
-		/*if(e.key.code == sf::Keyboard::Up)
-		{
-			temp = timer.getElapsedTime().asSeconds();
-			toJump = true;
-		}*/
+	}
+
+	m_sprite.update(sf::seconds(1.4));
+
+	if(runAnim && animTimer.getElapsedTime().asSeconds() > .44)
+	{
+		m_sprite.play();
+		animTimer.restart();
+	}
+	else
+	{
+		m_sprite.stop();
 	}
 
 	if(toJump)
@@ -184,20 +181,23 @@ void Player::update(sf::Event e)
 		toJump = false;
 	}
 
-	shape.setPosition(getSfCoords(body->GetPosition()));
-	//shape.setRotation(getAngleDegrees(body->GetAngle()));
+	m_sprite.setPosition(getSfCoords(body->GetPosition()));
 
-	//hitbox.setPosition(toSf(body->GetPosition().x), toSf(body->GetPosition().y));
 }
 
 void Player::draw(sf::RenderWindow& app)
 {
-	app.draw(shape);
+	app.draw(m_sprite);
+}
+
+sf::Vector2f Player::getPosition()
+{
+	return m_sprite.getPosition();
+}
+
+unsigned int Player::getType()
+{
+	return m_type;
 }
 
 Player::~Player(){}
-
-sf::RectangleShape Player::getShape()
-{
-	return shape;
-}

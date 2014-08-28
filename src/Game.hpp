@@ -29,6 +29,8 @@
 
 #include "XboxController.h"
 
+#include "ContactListener.hpp"
+
 class Game
 {
 public:
@@ -69,6 +71,8 @@ private:
 	std::vector<Terrain*> environment;
 
 	Player p;
+
+	ContactListener cl;
 
 	bool moveWith;
 	float step;
