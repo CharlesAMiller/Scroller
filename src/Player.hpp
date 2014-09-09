@@ -48,6 +48,7 @@ public:
 private:
 
 	Animation m_anim, walkingAnim;
+	AnimatedSprite m_sprite;
 
 	bool right, left;
 
@@ -55,7 +56,17 @@ private:
 
 	static sf::Texture playerSpriteSheet;
 
-	AnimatedSprite m_sprite;
+	/* Foot */
+	b2FixtureDef footFixture;
+	b2PolygonShape footShape;
+
+	/* Left Arm */
+	b2FixtureDef leftArmFixture;
+	b2PolygonShape leftArmShape;
+
+	/* Right Arm */
+	b2FixtureDef rightArmFixture;
+	b2PolygonShape rigthArmShape;
 
 };
 

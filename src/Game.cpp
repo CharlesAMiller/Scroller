@@ -36,6 +36,7 @@ Game::Game():
 
 		step = 1/60.0f;
 
+		/*
 		backgroundTexture.loadFromFile("res/bg.png");
 		backgroundTexture.setRepeated(true);
 
@@ -43,7 +44,7 @@ Game::Game():
 		backgroundShape.setSize(sf::Vector2f(4000, 4000));
 		backgroundShape.setOrigin(sf::Vector2f(2000, 2000));
 		backgroundShape.setPosition(sf::Vector2f(0, 0));
-
+		*/
 		m.load();
 		m.populate(world, environment, objects);
 
@@ -97,9 +98,9 @@ void Game::getInput()
 
 void Game::draw()
 {
-	app.clear(sf::Color::White);
+	app.clear(sf::Color(208,244,247));
 
-	app.draw(backgroundShape);
+	//app.draw(backgroundShape);
 
 	for(unsigned int i = 0; i < objects.size(); i++)
 	{

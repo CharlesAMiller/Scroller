@@ -22,6 +22,9 @@ Map::Map(std::string p)
 	//mapVals.push_back(sf::Color(139, 207, 186));
 
 	m_p = p;
+
+	curType = 1;
+
 }
 
 void Map::load()
@@ -32,8 +35,10 @@ void Map::load()
 
 	mapSize = m_image.getSize();
 
+	//Parsing from top down
 	for(unsigned int i = mapSize.y; i > 0; i--)
 	{
+		//Parsing from right to left
 		for(unsigned int j = mapSize.x; j > 0; j--)
 		{
 			sf::Color pixel = m_image.getPixel(j, i);
@@ -54,6 +59,7 @@ void Map::populate(b2World& w, std::vector<Terrain*>& t, std::vector<Object*>& o
 {
 
 	unsigned int x, y, z = 0;
+	unsigned int tempY = 0;
 
 	std::cout << "size" << m_map.size() << "\n";
 
@@ -67,57 +73,83 @@ void Map::populate(b2World& w, std::vector<Terrain*>& t, std::vector<Object*>& o
 			x = 0;
 		}
 
-		std::vector<std::vector<unsigned int> > consecutiveTiles;
-
-		int tempY = 0;
-
-		if(j > 0)
+		if(consecutiveTiles.size() > 0)
 		{
+			curType = m_map.at(j);
 
-			//std::cout << "Val: " << j << "Last Val: " << m_map.at(j-1) << "\n";
-
-			//Compare at the map value. DO NOT compare 'j' to anything. That's dumb.
-			if(m_map.at(j) == m_map.at(j-1) && tempY == y)
+			if(curType == m_map.at(j+1) && tempY == y)
 			{
-				std::cout << consecutiveTiles.size();
-				//consecutiveTiles.at(consecutiveTiles.size()-1)->push_back()
+				std::pair<sf::Vector2u, sf::Vector2f> part;
+				part.first = sf::Vector2u(j, m_map.at(j));
+				part.second = sf::Vector2f(x, y);
+
+				consecutiveTiles.at(consecutiveTiles.size()-1).push_back(part);
 			}
 			else
 			{
-				std::vector<unsigned int> sub; sub.push_back(j);
-				consecutiveTiles.push_back(sub);
+				std::pair<sf::Vector2u, sf::Vector2f> part;
+				part.first = sf::Vector2u(j, m_map.at(j));
+				part.second = sf::Vector2f(x, y);
+
+				std::vector< std::pair <sf::Vector2u, sf::Vector2f> > temp;
+				temp.push_back(part);
+
+				consecutiveTiles.push_back(temp);
 			}
+
 		}
 		else
 		{
-			std::vector<unsigned int> sub; sub.push_back(j);
-			consecutiveTiles.push_back(sub);
+			std::pair<sf::Vector2u, sf::Vector2f> part;
+			part.first = sf::Vector2u(j, m_map.at(j));
+			part.second = sf::Vector2f(x, y);
+
+			std::vector< std::pair <sf::Vector2u, sf::Vector2f> > temp;
+			temp.push_back(part);
+
+			consecutiveTiles.push_back(temp);
 		}
 
 		//std::cout << consecutiveTiles.size() << "\n";
 		tempY = y;
+	}
 
-		if(m_map[j] == 1)
+
+
+	for(unsigned int k = 0; k < consecutiveTiles.size()-1; k++)
+	{
+		std::vector<std::pair<sf::Vector2u, sf::Vector2f> > currentTiles;
+		currentTiles = consecutiveTiles.at(k);
+		std::cout << "Size of tileset " << currentTiles.size() << "\n";
+
+		int currentTileType = currentTiles.at(0).first.y;
+
+		if(currentTileType == 1)
 		{
-			Grass* g = new Grass("res/grass.png", w , sf::Vector2f(70, 70), sf::Vector2f(x*70, y*70), true);
+			std::cout << "Size test " << 70*currentTiles.size();
+			Grass* g = new Grass("res/grass.png", w , sf::Vector2f(70*currentTiles.size(), 70), sf::Vector2f(currentTiles.at(0).second.x*70, currentTiles.at(0).second.y*70), true);
 			t.push_back(g);
 
-			std::cout << "Grass\n";
 		}
 
-		else if(m_map[j] == 2)
+		else if(currentTileType == 2)
 		{
-			Ice* i = new Ice("res/ice.png", w , sf::Vector2f(70, 70), sf::Vector2f(x*70, y*70), true);
+			Ice* i = new Ice("res/ice.png", w , sf::Vector2f(70*currentTiles.size(), 70), sf::Vector2f(currentTiles.at(0).second.x*70, currentTiles.at(0).second.y*70), true);
 			t.push_back(i);
 
-			//std::cout << "Ice\n";
 		}
 
-		else if(m_map[j] == 3)
+		else if(currentTileType == 3)
 		{
 			Object* o = new Object("res/box.png", w, b2Shape::e_polygon, sf::Vector2f(x*70, y*70));
 			ot.push_back(o);
 		}
+		else if(currentTileType == 0)
+		{
+			std::cout << "Air";
+		}
+
+		std::cout << "\n";
 
 	}
 

@@ -38,9 +38,7 @@ Player::Player(std::string pa, b2World& w, sf::Vector2f pos):
 	bodyDef.fixedRotation = true;
 
 	playerSpriteSheet.loadFromFile("res/p1_spritesheet.png");
-
 	walkingAnim.setSpriteSheet(playerSpriteSheet);
-
 	walkingAnim.addFrame(sf::IntRect(288, 0, 72, 97));
 	walkingAnim.addFrame(sf::IntRect(145, 0, 72, 97));
 	walkingAnim.addFrame(sf::IntRect(217, 0, 72, 97));
@@ -54,6 +52,23 @@ Player::Player(std::string pa, b2World& w, sf::Vector2f pos):
 
 	animTimer.restart();
 
+	/* Left Arm */
+	b2Vec2 leftArmPosition(toB2(0), toB2(0));
+	leftArmShape.SetAsBox(toB2(10/2), toB2(8/2), leftArmPosition, 0);
+	leftArmFixture.shape = &footShape;
+	leftArmFixture.isSensor = true;
+
+	//body->CreateFixture(&leftArmFixture);
+
+	/* Foot */
+	b2Vec2 footPosition(toB2(0), toB2(-97/2));
+
+	// TODO Make me dynamic
+	footShape.SetAsBox(toB2(34/2), toB2(4/2), footPosition, 0);
+	footFixture.shape = &footShape;
+	footFixture.isSensor = true;
+
+	//body->CreateFixture(&footFixture);
 
 	body->SetUserData(this);
 }
@@ -66,8 +81,6 @@ void Player::update(sf::Event e)
 	bool toJump = false;
 
 	bool runAnim;
-
-	sf::Joystick::update();
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
 		|| xbox.buttonA())
@@ -96,7 +109,7 @@ void Player::update(sf::Event e)
 			b2Vec2 newVelocity = b2Vec2(0.35 * 30 + (1 - 0.35) * body->GetLinearVelocity().x, body->GetLinearVelocity().y);
 
 			timer.restart();
-
+			body->SetAwake(true);
 			body->SetLinearVelocity(newVelocity);
 		}
 
@@ -111,8 +124,9 @@ void Player::update(sf::Event e)
 		{
 			left = true;
 
-			b2Vec2 newVelocity = b2Vec2(0.35 * -30 + (1 - 0.35) * body->GetLinearVelocity().x, body->GetLinearVelocity().y);
+			b2Vec2 newVelocity = b2Vec2(0.35 * -28 + (1 - 0.35) * body->GetLinearVelocity().x, body->GetLinearVelocity().y);
 
+			body->SetAwake(true);
 			body->SetLinearVelocity(newVelocity);
 		}
 	}
@@ -143,14 +157,17 @@ void Player::update(sf::Event e)
 
 			if(right && !left)
 			{
+				body->SetAwake(true);
 				body->ApplyForceToCenter(b2Vec2(20, 0), true);
 			}
 			else if(!right && left)
 			{
+				body->SetAwake(true);
 				body->ApplyForceToCenter(b2Vec2(-20, 0), true);
 			}
 			else
 			{
+				body->SetAwake(true);
 				body->SetLinearVelocity(b2Vec2(0, body->GetLinearVelocity().y));
 			}
 		}

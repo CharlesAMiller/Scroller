@@ -44,6 +44,12 @@ private:
 	sf::Vector2u mapSize;
 
 	std::vector<int> m_map;
+
+	unsigned int curType;
+
+	std::vector<std::vector< std::pair<sf::Vector2u, sf::Vector2f> > > consecutiveTiles;
+
+
 };
 
 
