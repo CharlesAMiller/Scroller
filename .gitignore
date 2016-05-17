@@ -1,0 +1,14 @@
+# System files
+*.o
+*.a
+
+# Local Debug
+Debug/src
+/.settings
+
+*.exe
+
+# Project specific
+*.cproject
+*.project
+

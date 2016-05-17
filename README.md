@@ -3,16 +3,17 @@
 Scroller
 
 ### What is this repository for? ###
+This project was from a couple years back as a personal introduction to Box2D.
+The project was originally compiled with MinGW, and might have been tested with MSVC.
 
-* Scroller written with SFML and Box2D. 
-* Version: Jeez I don't know, like barely functioning.
+### Dependencies ###
+<i> This is an old project, so I'm fuzzy on the details. </i>
 
-### How do I get set up? ###
+* SFML 2.0
+* Box2D x ?
+* xinput (if you plan on using Xbox controller support)
 
-* Err, pull from the repo. Or download it. Then import it into your IDE of choice, I guess.
-
-### Who do I talk to? ###
+### Contact ###
 
 * The name is Charlie "Porthog" Miller.
       You can contact me at: charliea.miller@gmail.com
-* [My website](http://mutanthamster.com) is the primary location for all things to do with my programming.
